@@ -1,0 +1,147 @@
+-- =========================
+-- DATABASE
+-- =========================
+CREATE DATABASE IF NOT EXISTS car_service_database;
+USE car_service_database;
+
+-- =========================
+-- USERS
+-- =========================
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    firstName VARCHAR(50) NOT NULL,
+    lastName VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    phone VARCHAR(20),
+    role ENUM('user','admin') DEFAULT 'user',
+    isActive TINYINT(1) DEFAULT 1
+);
+
+INSERT INTO users (firstName, lastName, email, password, phone, role) VALUES
+('Pranjal', 'Chirmade', 'pranjal@gmail.com', 'pass123', '9999999999', 'user'),
+('Admin', 'User', 'admin@gmail.com', 'admin123', '8888888888', 'admin'),
+('Rahul', 'Patil', 'rahul@gmail.com', 'rahul123', '7777777777', 'user');
+
+-- =========================
+-- STATIONS
+-- =========================
+CREATE TABLE stations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(255),
+    isActive TINYINT(1) DEFAULT 1
+);
+
+INSERT INTO stations (name, address) VALUES
+('Pune Station', 'Shivaji Nagar, Pune'),
+('Mumbai Station', 'Andheri East, Mumbai'),
+('Nagpur Station', 'Sitabuldi, Nagpur');
+
+-- =========================
+-- SERVICES
+-- =========================
+CREATE TABLE services (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(255),
+    isActive TINYINT(1) DEFAULT 1
+);
+
+INSERT INTO services (name, description) VALUES
+('Car Wash', 'Complete exterior & interior wash'),
+('Oil Change', 'Engine oil replacement'),
+('Full Service', 'Complete vehicle servicing');
+
+-- =========================
+-- STATION SERVICE PRICES
+-- =========================
+CREATE TABLE station_service_prices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    stationId INT NOT NULL,
+    serviceId INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL
+);
+
+INSERT INTO station_service_prices (stationId, serviceId, price) VALUES
+(1, 1, 500.00),
+(1, 2, 1200.00),
+(2, 3, 3500.00);
+
+-- =========================
+-- BOOKINGS
+-- =========================
+CREATE TABLE bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    serviceId INT NOT NULL,
+    stationId INT NOT NULL,
+    scheduledDate DATE NOT NULL,
+    vehicleDetails JSON,
+    totalPrice DECIMAL(10,2) NOT NULL,
+    status ENUM('Pending','In Progress','Completed','Cancelled') DEFAULT 'Pending'
+);
+
+INSERT INTO bookings (userId, serviceId, stationId, scheduledDate, vehicleDetails, totalPrice, status) VALUES
+(1, 1, 1, '2026-02-05', '{"car":"Swift","number":"MH12AB1234"}', 500.00, 'Pending'),
+(2, 3, 2, '2026-02-06', '{"car":"Creta","number":"MH01CD5678"}', 3500.00, 'In Progress'),
+(3, 2, 1, '2026-02-07', '{"car":"i20","number":"MH20EF9999"}', 1200.00, 'Completed');
+
+-- =========================
+-- BOOKING STATUS HISTORY
+-- =========================
+CREATE TABLE booking_status_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    bookingId INT,
+    status VARCHAR(50),
+    notes TEXT,
+    changedBy INT,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO booking_status_history (bookingId, status, notes, changedBy) VALUES
+(1, 'Pending', 'Booking created', 1),
+(2, 'In Progress', 'Service started', 2),
+(3, 'Completed', 'Service completed successfully', 2);
+
+-- =========================
+-- MESSAGES
+-- =========================
+CREATE TABLE messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    bookingId INT,
+    userId INT,
+    message TEXT,
+    attachmentUrl VARCHAR(255),
+    messageType ENUM('text','image','file') DEFAULT 'text',
+    isRead TINYINT(1) DEFAULT 0,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO messages (bookingId, userId, message, messageType) VALUES
+(1, 1, 'When will my car be ready?', 'text'),
+(2, 2, 'Service is in progress', 'text'),
+(3, 3, 'Thanks for the service!', 'text');
+
+-- =========================
+-- RECEIPTS
+-- =========================
+CREATE TABLE receipts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    bookingId INT,
+    receiptNumber VARCHAR(50),
+    items JSON,
+    subtotal DECIMAL(10,2),
+    tax DECIMAL(10,2),
+    total DECIMAL(10,2),
+    issuedAt DATETIME,
+    createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+INSERT INTO receipts (bookingId, receiptNumber, items, subtotal, tax, total, issuedAt) VALUES
+(1, 'REC001', '{"service":"Car Wash"}', 500.00, 50.00, 550.00, NOW()),
+(2, 'REC002', '{"service":"Full Service"}', 3500.00, 350.00, 3850.00, NOW()),
+(3, 'REC003', '{"service":"Oil Change"}', 1200.00, 120.00, 1320.00, NOW());
