@@ -1,0 +1,202 @@
+{
+  "info": {
+    "_postman_id": "f5a1234e-abc1-4d23-987f-1234567890ab",
+    "name": "Car Service API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": { "raw": "http://localhost:5000/api/auth/register", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","auth","register"] }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": { "raw": "http://localhost:5000/api/auth/login", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","auth","login"] }
+          }
+        },
+        {
+          "name": "Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "<token>" }
+            ],
+            "url": { "raw": "http://localhost:5000/api/auth/profile", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","auth","profile"] }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "<token>" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"1234567890\"\n}"
+            },
+            "url": { "raw": "http://localhost:5000/api/auth/profile", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","auth","profile"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Get All Services",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:5000/api/services", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","services"] }
+          }
+        },
+        {
+          "name": "Get Service By ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:5000/api/services/1", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","services","1"] }
+          }
+        },
+        {
+          "name": "Get Services by Station",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:5000/api/services/station/1", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","services","station","1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stations",
+      "item": [
+        {
+          "name": "Get All Stations",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:5000/api/stations", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","stations"] }
+          }
+        },
+        {
+          "name": "Get Station By ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:5000/api/stations/1", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","stations","1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings",
+      "item": [
+        {
+          "name": "Create Booking",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "<token>" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": 1,\n  \"stationId\": 1,\n  \"scheduledDate\": \"2025-12-25\",\n  \"vehicleDetails\": {\"model\":\"Toyota\",\"plate\":\"ABC123\"},\n  \"totalPrice\": 100\n}"
+            },
+            "url": { "raw": "http://localhost:5000/api/bookings", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","bookings"] }
+          }
+        },
+        {
+          "name": "Get My Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "<token>" }
+            ],
+            "url": { "raw": "http://localhost:5000/api/bookings", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","bookings"] }
+          }
+        },
+        {
+          "name": "Get Booking By ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "<token>" }
+            ],
+            "url": { "raw": "http://localhost:5000/api/bookings/1", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","bookings","1"] }
+          }
+        },
+        {
+          "name": "Update Booking Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "<token>" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\"\n}"
+            },
+            "url": { "raw": "http://localhost:5000/api/bookings/1/status", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","bookings","1","status"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "<token>" }
+            ],
+            "url": { "raw": "http://localhost:5000/api/admin/users", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","admin","users"] }
+          }
+        },
+        {
+          "name": "Get All Bookings",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "<token>" }
+            ],
+            "url": { "raw": "http://localhost:5000/api/admin/bookings", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","admin","bookings"] }
+          }
+        },
+        {
+          "name": "Get Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "<token>" }
+            ],
+            "url": { "raw": "http://localhost:5000/api/admin/statistics", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api","admin","statistics"] }
+          }
+        }
+      ]
+    }
+  ]
+}
